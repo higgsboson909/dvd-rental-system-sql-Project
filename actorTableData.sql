@@ -43,10 +43,4 @@ VALUES
 (41, 'Arslan', 'Khan'),
 (42, 'Noman', 'Hussain'),
 (43, 'Iqra', 'Ahmed'),
-(44, 'Fahad', 'Rashid'),
-(45, 'Sohail', 'Javed'),
-(46, 'Zohaib', 'Malik'),
-(47, 'Rizwan', 'Ali'),
-(48, 'Areeba', 'Khan'),
-(49, 'Umair', 'Hussain'),
-(50, 'Hassan', 'Ahmed');
+(44, 'Fahad', 'Rashid');
