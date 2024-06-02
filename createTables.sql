@@ -62,8 +62,6 @@ create table film_category(
 create table address(
 	address_id int,
     address text,
-    address2 text,
-    district varchar(255),
     city_id int,
     postal_code int,
     phone int,
