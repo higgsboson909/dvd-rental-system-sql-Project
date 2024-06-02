@@ -1,7 +1,7 @@
-create database sakila;
-use sakila;
+create database project1;
+use project1;
 
-create table actor (
+create table actor (			
 	actor_id int ,
     first_name varchar(100),
     last_name varchar(100),
@@ -38,7 +38,7 @@ create table film (
 	film_id int,
 	title varchar(255),
 	description text,
-	release_year year,
+	release_year int,
 	language_id int,
 	original_language_id int,
 	rental_duration int,
@@ -70,15 +70,13 @@ create table address(
 );
 
 create table inventory (
-	inventory_id int,
+	inventory_id int primary key,
     film_id int,
     store_id int
-);
+	foreign key(film_id) references film(film_id),
+	foreign key (store_id) references store(store_id)
     
-alter table inventory 
-	add constraint primary key(inventory_id), 
-	add constraint foreign key(film_id) references film(film_id),
-	add constraint foreign key (store_id) references store(store_id);
+);
     
 
 create table staff (
@@ -106,7 +104,7 @@ create table store (
 );
 
 alter table staff
-	add constraint foreign key (staff_id) references store(store_id);
+	ADD foreign key (staff_id) references store(store_id);
 
 create table customer(
 	customer_id int,
@@ -145,13 +143,11 @@ create table payment(
 );
 
 create table film_actor(
-	actor_id int,
-    film_id int,
+	actor_id int NOT NULL,
+    film_id int NOT NULL,
     foreign key(film_id) references film(film_id),
     foreign key(actor_id) references actor(actor_id)
 );
 
 alter table film_actor 
-add constraint primary key (actor_id, film_id); 
-
-show tables;
+add primary key (actor_id, film_id); 
