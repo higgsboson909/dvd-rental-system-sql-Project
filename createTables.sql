@@ -1,32 +1,32 @@
-create database project1;
-use project1;
+create database project;
+use project;
 
-create table actor (			
+create table actor(			--select Distinct first_name from actor
 	actor_id int ,
     first_name varchar(100),
     last_name varchar(100),
     primary key(actor_id)
 );
 
-create table category (
+create table category(			--select Distinct category_id from category
 	category_id int,
     name varchar(50),
     primary key(category_id)
 );
 
-create table language (
+create table language(			--select * from language
 	language_id int,
     name varchar(50),
     primary key (language_id)
 );
 
-create table country(
+create table country(			-- created
 	country_id int,
     country_name varchar(255),
     primary key (country_id)
 );
 
-create table city (
+create table city(				--SELECT * FROM city
 	city_id int,
     city_name varchar(255),
     country_id int,
@@ -34,19 +34,17 @@ create table city (
     foreign key(country_id) references country(country_id)
 );
 
-create table film (
+
+create table film(			
 	film_id int,
 	title varchar(255),
 	description text,
 	release_year int,
 	language_id int,
-	original_language_id int,
 	rental_duration int,
 	rental_rate float,
-	length int,
 	replacement_cost float,
 	rating varchar(50),
-	special_features text,
     primary key(film_id),
     foreign key(language_id) references language(language_id)
 );
@@ -151,3 +149,5 @@ create table film_actor(
 
 alter table film_actor 
 add primary key (actor_id, film_id); 
+
+drop database project1
