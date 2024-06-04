@@ -3,4 +3,4 @@ insert into language values
 (2,'Punjabi'),
 (3,'Hindi'),
 (4,'Arabic'),
-(5,'Persian');
+(5,'English');
