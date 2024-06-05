@@ -8,7 +8,7 @@ create table actor(			--select Distinct first_name from actor
     primary key(actor_id)
 );
 
-create table category(			--select Distinct category_id from category
+create table category(			--data is inserted
 	category_id int,
     name varchar(50),
     primary key(category_id)
@@ -35,7 +35,7 @@ create table city(				--SELECT * FROM city
 );
 
 
-create table film(			
+create table film(			--inserted data
 	film_id int,
 	title varchar(255),
 	description text,
@@ -49,7 +49,7 @@ create table film(
     foreign key(language_id) references language(language_id)
 );
 
-create table film_category(
+create table film_category(			
 	film_id int,
     category_id int,
     primary key (category_id, film_id),
