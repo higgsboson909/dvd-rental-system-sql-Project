@@ -9,9 +9,7 @@ values
 (7,'Quetta',1),
 (8,'Chennai',2),
 (9,'Hyderabad',2),
-(10,'Bhopaal',2),
-(11,'Istunbul',7),
-(12,'Dhaaka',3),
-(13,'Paris',6),
-(14,'London',5),
-(15,'Colombo',4);
+(10,'Istunbul',7),
+(11,'Karachi', 1),
+(12,'Paris',6),
+(13,'London',5);
