@@ -36,7 +36,7 @@ VALUES
 (33, 'Sardaar Ji', 'A supernatural comedy film about a man who falls in love with a ghost and must find a way to bring her back to life.', 2015, 2, 5, 2.99, 135, 9.99, 'PG-13',),
 (34, 'Bambukat', 'A period drama film about a man who falls in love with a woman from a higher social class and must navigate the challenges of their different backgrounds.', 2016, 2, 5, 2.99, 155, 9.99, 'PG-13'),
 (35, 'Manje Bistre', 'A comedy film about a man who falls in love with a woman at a traditional Punjabi wedding and must win her familys approval.', 2017, 2, 5, 2.99, 150, 9.99, 'PG-13'),
-(36, 'Jatt & Juliet', 'A romantic comedy film about a Sikh man and a white woman who fall in love despite their cultural differences.', 2012, 2, 5, 2.99, 118, 9.99, 'PG-13')
+(36, 'Jatt & Juliet', 'A romantic comedy film about a Sikh man and a white woman who fall in love despite their cultural differences.', 2012, 2, 5, 2.99, 118, 9.99, 'PG-13'),
 (37, 'Barakah Meets Barakah', 'A romantic comedy film about a man who falls in love with a woman from a higher social class and must navigate the challenges of their different backgrounds.', 2016, 4, 5, 2.99, 88, 9.99, 'PG-13'),
 (38, 'Theeb', 'A drama film about a young boy who accompanies a British officer on a perilous journey across the desert.', 2014, 4, 5, 2.99, 100, 9.99, 'PG-13'),
 (39, 'Omar', 'A drama film about a young man who is accused of murder and must navigate the complexities of the Palestinian justice system.', 2013, 4, 5, 2.99, 96, 9.99, 'PG-13'),

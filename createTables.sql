@@ -146,14 +146,12 @@ create table payment(		--payment data inserted
     foreign key (rental_id) references rental(rental_id)
 );
 
-create table film_actor(
+create table film_actor(			--data inserted
 	actor_id int NOT NULL,
     film_id int NOT NULL,
+    primary key (actor_id, film_id),
     foreign key(film_id) references film(film_id),
     foreign key(actor_id) references actor(actor_id)
 );
 
-alter table film_actor 
-add primary key (actor_id, film_id); 
 
-drop database project1
