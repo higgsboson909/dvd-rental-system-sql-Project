@@ -132,13 +132,14 @@ create table rental (				--data insereted
     foreign key (customer_id) references customer(customer_id),
     foreign key (staff_id) references staff(staff_id)
 );
-drop table rental
-create table payment(
+
+create table payment(		--payment data inserted
 	payment_id int,
     customer_id int,
     staff_id int,
     rental_id int,
     amount float,
+	payment_date date,
     primary key (payment_id),
     foreign key (customer_id) references customer(customer_id),
     foreign key (staff_id) references staff(staff_id),
