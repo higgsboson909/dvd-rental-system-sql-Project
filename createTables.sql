@@ -49,7 +49,7 @@ create table film(			--inserted data
     foreign key(language_id) references language(language_id)
 );
 
-create table film_category(			
+create table film_category(			--data inserted
 	film_id int,
     category_id int,
     primary key (category_id, film_id),

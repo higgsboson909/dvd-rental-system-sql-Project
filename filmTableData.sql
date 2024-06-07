@@ -32,7 +32,7 @@ VALUES
 (29, 'The Matrix', 'A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.', 1999, 5, 2, 2.99, 4.5, 'R'),
 (30, 'The Shawshank Redemption', 'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.', 1994, 5, 7, 2.99, 4.5, 'R'),
 (31, 'The Godfather', 'The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.', 1972, 5, 5, 4.99, 5.0, 'R'),
-(32, 'Carry On Jatta', 'A comedy film about a man who pretends to be in love with a woman to please his family, but things get complicated when he actually falls in love with her cousin.', 2012, 2, 7, 3.99, 145, 12.99, 'PG-13',),
+(32, 'Carry On Jatta', 'A comedy film about a man who pretends to be in love with a woman to please his family, but things get complicated when he actually falls in love with her cousin.', 2012, 2, 7, 3.99, 145, 12.99, 'PG-13'),
 (33, 'Sardaar Ji', 'A supernatural comedy film about a man who falls in love with a ghost and must find a way to bring her back to life.', 2015, 2, 5, 2.99, 135, 9.99, 'PG-13',),
 (34, 'Bambukat', 'A period drama film about a man who falls in love with a woman from a higher social class and must navigate the challenges of their different backgrounds.', 2016, 2, 5, 2.99, 155, 9.99, 'PG-13'),
 (35, 'Manje Bistre', 'A comedy film about a man who falls in love with a woman at a traditional Punjabi wedding and must win her familys approval.', 2017, 2, 5, 2.99, 150, 9.99, 'PG-13'),
