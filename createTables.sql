@@ -93,13 +93,14 @@ create table staff (                --data inserted
     foreign key (address_id) references address(address_id)
 );
 
-create table store (
+create table store (		--store data inserted
 	store_id int,
     manager_staff_id int,
     address_id int,
     primary key(store_id),
     foreign key (address_id) references address(address_id),
-    foreign key (manager_staff_id) references staff(staff_id)
+    foreign key (manager_staff_id) references staff(staff_id),
+
 );
 
 alter table staff
