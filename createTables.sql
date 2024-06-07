@@ -66,7 +66,7 @@ create table address(				--data inserted
     primary key (address_id),
     foreign key(city_id) references city(city_id)
 );
-drop table address
+
 
 create table inventory (
 	inventory_id int primary key,
@@ -78,7 +78,7 @@ create table inventory (
 );
     
 
-create table staff (
+create table staff (                --data inserted
 	staff_id int,
     first_name varchar(100),
     last_name varchar(100),
