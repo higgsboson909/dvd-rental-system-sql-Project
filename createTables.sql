@@ -68,7 +68,7 @@ create table address(				--data inserted
 );
 
 
-create table inventory (
+create table inventory (			--data inserted
 	inventory_id int primary key,
     film_id int,
     store_id int
@@ -107,7 +107,7 @@ create table store (		--store data inserted
 );
 
 
-create table customer(
+create table customer(		--data inserted
 	customer_id int,
     store_id int,
     first_name varchar(100),
