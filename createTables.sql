@@ -120,17 +120,19 @@ create table customer(		--data inserted
     foreign key (address_id) references address(address_id)
 );
 
-create table rental (
+create table rental (				--data insereted
 	rental_id int,
-    inventory_id int,
+    rental_date date,
+	inventory_id int,
     customer_id int,
+	return_date date,
     staff_id int,
     primary key (rental_id),
     foreign key (inventory_id) references inventory(inventory_id),
     foreign key (customer_id) references customer(customer_id),
     foreign key (staff_id) references staff(staff_id)
 );
-
+drop table rental
 create table payment(
 	payment_id int,
     customer_id int,
