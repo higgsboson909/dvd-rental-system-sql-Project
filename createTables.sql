@@ -92,6 +92,9 @@ create table staff (                --data inserted
     primary key(staff_id),
     foreign key (address_id) references address(address_id)
 );
+alter table staff
+	ADD foreign key (staff_id) references store(store_id);
+
 
 create table store (		--store data inserted
 	store_id int,
@@ -103,8 +106,6 @@ create table store (		--store data inserted
 
 );
 
-alter table staff
-	ADD foreign key (staff_id) references store(store_id);
 
 create table customer(
 	customer_id int,

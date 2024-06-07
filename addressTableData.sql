@@ -1,5 +1,5 @@
 
-INSERT INTO address
+INSERT INTO address(address_id, address, city_id, postal_code, phone)
 VALUES
 (1, 'House 123 Street 1 Quetta', 7, 12345, 030013242),
 (2, 'Flat 456 Block B Istunbul', 10, 23456, 031113242),
