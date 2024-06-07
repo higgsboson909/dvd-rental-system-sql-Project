@@ -57,7 +57,7 @@ create table film_category(			--data inserted
     foreign key (film_id) references film(film_id)
 );
 
-create table address(
+create table address(				--data inserted
 	address_id int,
     address text,
     city_id int,
@@ -66,6 +66,7 @@ create table address(
     primary key (address_id),
     foreign key(city_id) references city(city_id)
 );
+drop table address
 
 create table inventory (
 	inventory_id int primary key,
