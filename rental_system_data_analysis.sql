@@ -376,3 +376,44 @@ GROUP BY
     category.name
 ORDER BY 
     no_of_rentals DESC;
+
+-- top 10 customers by rental frequency
+SELECT customer.customer_id, COUNT(rental.rental_id) AS rental_frequency
+FROM customer
+INNER JOIN rental ON customer.customer_id = rental.customer_id
+GROUP BY customer.customer_id;
+
+-- no_of_categories for a specific film
+select film.title, count(film_category.category_id) as no_of_categories
+from film
+inner join film_category on film.film_id = film_category.film_id
+group by film.title
+
+-- no_of_films for a specific category
+select category.name, count(film_category.category_id) as no_of_films
+from category
+inner join film_category on category.category_id = film_category.category_id
+group by category.name
+order by count(film_category.category_id) DESC
+
+-- average rate of movies under a certain category
+select category.name, round(avg(film.rental_rate), 2) as avg_rental_rate
+from category
+inner join 
+	film_category on category.category_id = film_category.category_id
+inner join 
+	film on film_category.film_id = film.film_id
+group by category.name
+order by 2 DESC
+
+-- sum of rental_rate for certain category
+select category.name, round(sum(film.rental_rate), 2) as rental_rate_sum
+from category
+inner join
+	film_category on category.category_id = film_category.category_id
+inner join
+	film on film_category.film_id = film.film_id
+group by category.name
+order by 2 desc
+
+
