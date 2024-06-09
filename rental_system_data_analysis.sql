@@ -1,4 +1,29 @@
 
+--no of actors
+select count(distinct(actor_id)) as number_of_actors from actor;
+
+-- display actor full_name by concatenating
+select left(first_name, 1) + lower(substring(first_name, 2, len(first_name))) +
+' ' + left(last_name, 1) + lower(substring(last_name, 2, len(last_name)))
+from actor
+
+-- find the number of actors whose last_name is same
+select last_name, count(last_name)
+from actor
+group by last_name
+
+-- There exists 7 duplicate record by the last_name of Ahmed
+select concat(first_name, ' ', last_name) as full_name
+from actor
+where last_name like '%Ahmed%';
+
+-- Category Table 
+select * from category;
+
+select count(distinct(name)) as no_of_category from category;
+
+
+
 -- 1.	Countries where the services are provided.
 select * from country;
 
@@ -292,7 +317,7 @@ ORDER BY
 
 -- 22. Revenue per month
 SELECT 
-    DATENAME(MONTH, payment_date) AS month_no, 
+    DATENAME(MONTH, payment_date) AS month, 
     ROUND(SUM(amount), 2) AS total_amount
 FROM 
     payment
@@ -399,9 +424,9 @@ order by count(film_category.category_id) DESC
 -- average rate of movies under a certain category
 select category.name, round(avg(film.rental_rate), 2) as avg_rental_rate
 from category
-inner join 
+left join 
 	film_category on category.category_id = film_category.category_id
-inner join 
+left join 
 	film on film_category.film_id = film.film_id
 group by category.name
 order by 2 DESC
@@ -409,11 +434,32 @@ order by 2 DESC
 -- sum of rental_rate for certain category
 select category.name, round(sum(film.rental_rate), 2) as rental_rate_sum
 from category
-inner join
+left join
 	film_category on category.category_id = film_category.category_id
-inner join
+left join
 	film on film_category.film_id = film.film_id
 group by category.name
 order by 2 desc
 
+--  Get all customers who have rented a film in a specific category
+select *
+from customer
+inner join rental on customer.customer_id = rental.customer_id
+inner join inventory on rental.inventory_id = inventory.inventory_id
+inner join film_category on inventory.film_id = film_category.film_id
+inner join category on film_category.category_id = category.category_id
+where category.category_id = 1 -- replace with any category_id
+
+-- Get all customers who live in a specific city
+select city.city_name, * 
+from customer
+inner join address on customer.address_id = address.address_id
+inner join city on city.city_id = address.city_id
+where city.city_id = 3
+
+-- get all films with specific actor
+SELECT concat(actor.first_name, ' ', actor.last_name), * FROM film
+inner JOIN film_actor ON film.film_id = film_actor.film_id
+inner join actor on film_actor.actor_id = actor.actor_id
+WHERE film_actor.actor_id = 2;  -- Replace with desired actor ID
 
