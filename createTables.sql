@@ -155,3 +155,25 @@ create table film_actor(			--data inserted
 );
 
 
+-- add column
+alter table <table_name>
+add  <column_name> datatype
+
+-- delete column
+alter table <table_name>
+drop column <column_name>
+
+-- rename any column_name
+exec sp_rename '<table_name.old_column_name>', '<new_name>', 'column'; 
+
+-- modify column datatype
+alter table <table_name>
+alter column <column_name> datatype
+
+-- NOT NULL constraints by alter table
+alter table <table_name>
+alter column <column_name> datatype NOT NULL
+
+-- primary_key constraint
+alter table <table_name>
+add primary key (<column_name>);
