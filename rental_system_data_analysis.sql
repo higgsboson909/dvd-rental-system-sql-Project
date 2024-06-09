@@ -1,7 +1,6 @@
 
 -- 1.	Countries where the services are provided.
 select * from country;
--- The DVD rental service is provided in  countries
 
 -- 2.	Countries having the highest cities.
 SELECT country.country_name, COUNT(city.country_id) AS no_of_cities
@@ -55,26 +54,41 @@ ORDER BY rcv_payments DESC;
 
 
 -- 7.	Cities having the highest rental.
-select city_name, count(rental_id) as number_of_rentals, 
-sum(count(rental_id)) over (order by count(rental_id) desc, city_name ) as running_total
-from city b 
-join address c on c.city_id = b.city_id
-join customer d on d.address_id = c.address_id
-join rental e on d.customer_id = e.customer_id
-group by 1
-order  by 2 desc;
--- Aurora city in the USA has the highest amount of rentals, 50.
+SELECT 
+    city_name, 
+    COUNT(rental_id) AS number_of_rentals, 
+    SUM(COUNT(rental_id)) OVER (ORDER BY COUNT(rental_id) DESC, city_name) AS running_total
+FROM 
+    city 
+JOIN 
+    address ON address.city_id = city.city_id
+JOIN 
+    customer ON customer.address_id = address.address_id
+JOIN 
+    rental ON rental.customer_id = customer.customer_id
+GROUP BY 
+    city_name
+ORDER BY 
+    number_of_rentals DESC;
 
 -- 8.	Cities having the highest revenue.
-select city_name, round(sum(amount), 2) as rcv_payments, 
-sum(round(sum(amount), 2)) over (order by round(sum(amount), 2) desc, city_name ) as running_total
-from city b 
-join address c on c.city_id = b.city_id
-join customer d on d.address_id = c.address_id
-join payment e on d.customer_id = e.customer_id
-group by 1
-order  by 2 desc;
--- Highest amount of payment has been received from Cape Coral, 221.55
+SELECT 
+    city_name, 
+    ROUND(SUM(amount), 2) AS rcv_payments, 
+    SUM(ROUND(SUM(amount), 2)) OVER (ORDER BY ROUND(SUM(amount), 2) DESC, city_name) AS running_total
+FROM 
+    city 
+JOIN 
+    address ON address.city_id = city.city_id
+JOIN 
+    customer ON customer.address_id = address.address_id
+JOIN 
+    payment ON payment.customer_id = customer.customer_id
+GROUP BY 
+    city_name
+ORDER BY 
+    rcv_payments DESC;
+
  
 -- 9.	Customers having the highest rental.
 SELECT customer.first_name + ' ' + customer.last_name AS full_name, 
@@ -266,105 +280,99 @@ INNER JOIN
     language ON film.language_id = language.language_id;
 
 -- 21. Rentals each month
-select monthname(rental_date) as month_no, count(rental_id) no_of_rentals 
-from rental
-group by 1
-order by 2 desc;
--- July has the highest rental 6709
+SELECT 
+    DATENAME(MONTH, rental_date) AS month_no, 
+    COUNT(rental_id) AS no_of_rentals
+FROM 
+    rental
+GROUP BY 
+    DATENAME(MONTH, rental_date)
+ORDER BY 
+    no_of_rentals DESC;
 
 -- 22. Revenue per month
-select monthname(payment_date) as month_no, round(sum(amount), 2) no_of_rentals
-from payment
-group by 1
-order by 2 desc;
--- July had the highest revenue 28373.89
+SELECT 
+    DATENAME(MONTH, payment_date) AS month_no, 
+    ROUND(SUM(amount), 2) AS total_amount
+FROM 
+    payment
+GROUP BY 
+    DATENAME(MONTH, payment_date)
+ORDER BY 
+    total_amount DESC;
 
 -- 23. Highest grossing year
-select year(payment_date) year, round(sum(amount), 2) revenue
-from payment
-group by 1
-order by 2 desc;
--- 2005 produced the highest revenue
+SELECT 
+    YEAR(payment_date) AS year, 
+    ROUND(SUM(amount), 2) AS revenue
+FROM 
+    payment
+GROUP BY 
+    YEAR(payment_date)
+ORDER BY 
+    revenue DESC;
 
--- 24. Revenue between July, 2005 and January, 2006.
-select round(sum(amount), 2) revenue_amt
-from payment
-where payment_date>= '2005-07-01'and payment_date <= '2006-01-31';
+-- 24. Revenue between dates.
+SELECT 
+    ROUND(SUM(amount), 2) AS revenue_amt
+FROM 
+    payment
+WHERE 
+    payment_date >= DATE AND payment_date <= DATE;
 
 -- 25. Distinct renters per month.
-select monthname(rental_date) as month_no, count(distinct(customer_id)) no_of_rentals 
-from rental a 
-join customer b using(customer_id)
-group by 1 
-order by 2 desc;
--- August and July has the highest distinct renters 
+SELECT 
+    DATENAME(MONTH, rental_date) AS month_no, 
+    COUNT(DISTINCT rental.customer_id) AS no_of_rentals
+FROM 
+    rental
+INNER JOIN 
+    customer 
+ON 
+    rental.customer_id = customer.customer_id
+GROUP BY 
+    DATENAME(MONTH, rental_date)
+ORDER BY 
+    no_of_rentals DESC;
 
--- 26. Rentals which encountered no gain.
-select a.rental_id, b.amount from rental a left join payment b using(rental_id) where b.amount = 0;
 
--- 27. Active and Inactive Customers.
-select active, count(active) from customer group by active;
+-- 26. Which is the most popular genres.
+SELECT 
+    category.name, 
+    COUNT(rental.rental_id) AS no_of_rentals
+FROM 
+    category
+INNER JOIN 
+    film_category ON category.category_id = film_category.category_id
+INNER JOIN 
+    film ON film.film_id = film_category.film_id
+INNER JOIN 
+    inventory ON film.film_id = inventory.film_id
+INNER JOIN 
+    rental ON inventory.inventory_id = rental.inventory_id
+GROUP BY 
+    category.name
+ORDER BY 
+    no_of_rentals DESC;
 
--- 28. Customers who bought DVDs instead of renting.
-select * from payment where rental_id is null;
-
--- 29. In which quater was the highest revenue reported.
-select 
-	case 
-		when (date(payment_date) between '2005-01-01' and '2005-03-31') or (date(payment_date) between '2006-01-01' and '2006-03-31') then 'Quarter 1'
-        when (date(payment_date) between '2005-04-01' and '2005-06-30') or (date(payment_date) between '2006-04-01' and '2006-06-30') then 'Quarter 2'
-        when (date(payment_date) between '2005-07-01' and '2005-09-30') or (date(payment_date) between '2006-07-01' and '2006-09-30') then 'Quater 3'
-        when (date(payment_date) between '2005-10-01' and '2005-12-31') or (date(payment_date) between '2006-10-01' and '2006-12-31') then 'Quarter 4'
-	end year_quater,
-    round(sum(amount), 2) as revenue
- from payment 
- group by 1
- order by 2 desc;
- -- 3rd Quarter reported the maximum revenue of 52446.02
- 
- -- 30. In which quater was the highest revenue reported.
- select quarter(rental_date) quarters, count(rental_id) as no_of_rental
- from rental
- group by 1
- order by 2 desc;
- -- 3rd quarter has been reported to have highest rentals with 12395 count
- 
- -- 31. Which movie was rented more than 9 days.
- select title, datediff(return_date, rental_date) as rented_days
- from rental 
- join inventory using(inventory_id) 
- join film using(film_id) 
- where datediff(return_date, rental_date)>=10
- group by 1
- order by 2 desc;
- 
--- 32. Which customer rented more than 9 days.
-select full_name, datediff(return_date, rental_date) as rental_days
-from rental 
-join customer using(customer_id)
-where datediff(return_date, rental_date)>=10
-group by 1
-order by 2 desc; 
-
--- 33. Which is the most popular genres.
-select a.name , count(e.rental_id) as no_of_rentals
-from category a
-join film_category b on a.category_id = b.category_id
-join film c on c.film_id = b.film_id
-join inventory d on c.film_id = d.film_id
-join rental e on d.inventory_id = e.inventory_id
-group by 1
-order by 2 desc;
--- Sports genre has the highest number of rentals.
-
--- 34. Which is the highest grossing genre.
-select a.name , count(e.rental_id) as no_of_rentals, round(sum(f.amount), 2) as revenue
-from category a
-join film_category b on a.category_id = b.category_id
-join film c on c.film_id = b.film_id
-join inventory d on c.film_id = d.film_id
-join rental e on d.inventory_id = e.inventory_id
-join payment f on e.rental_id = f.rental_id
-group by 1
-order by 2 desc;
--- Sports is the highest grossing genre
+-- 26. Which is the highest grossing genre.
+SELECT 
+    category.name, 
+    COUNT(rental.rental_id) AS no_of_rentals, 
+    ROUND(SUM(payment.amount), 2) AS revenue
+FROM 
+    category
+INNER JOIN 
+    film_category ON category.category_id = film_category.category_id
+INNER JOIN 
+    film ON film.film_id = film_category.film_id
+INNER JOIN 
+    inventory ON film.film_id = inventory.film_id
+INNER JOIN 
+    rental ON inventory.inventory_id = rental.inventory_id
+INNER JOIN 
+    payment ON rental.rental_id = payment.rental_id
+GROUP BY 
+    category.name
+ORDER BY 
+    no_of_rentals DESC;
