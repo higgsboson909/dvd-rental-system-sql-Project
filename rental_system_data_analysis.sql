@@ -123,8 +123,8 @@ inner join customer on rental.customer_id = customer.customer_id
 group by (customer.first_name  + ' ' + customer.last_name)
 order by no_of_rentals desc;
 
--- 10.	Customer who produced the highest revenue(entire with address).
-select customer.first_name + ' ' + customer.last_name as full_name,
+-- 10.	Customer who produced the highest revenue
+select top 15 customer.first_name + ' ' + customer.last_name as full_name,
        ROUND(SUM(amount), 2) as rcv_amount
 from customer
 inner join rental on customer.customer_id = rental.customer_id
@@ -173,7 +173,7 @@ order by
 -- 14.	Staff collecting the highest payment.
 select 
     staff.first_name + ' ' + staff.last_name as staff_name, 
-    ROUND(SUM(payment.amount), 2)
+    ROUND(SUM(payment.amount), 2) as amount_by_staff
 from 
     staff
 inner join 
@@ -260,8 +260,8 @@ order by
 -- 19. Write a query to find the full names of customers who have rented science fiction, comedy, action and drama movies highest times.
 
 select 
-    ConCAT(customer.first_name, ' ', customer.last_name) as customer_name,
-    COUNT(category.category_id) as no_of_times_rented
+    concat(customer.first_name, ' ', customer.last_name) as customer_name,
+    count(category.category_id) as no_of_times_rented
 from 
     customer
 inner join 
@@ -304,7 +304,7 @@ inner join
 inner join 
     language on film.language_id = language.language_id;
 
--- 21. Rentals each month
+-- 22. Rentals each month
 select 
     DATENAME(MonTH, rental_date) as month_no, 
     COUNT(rental_id) as no_of_rentals
@@ -315,7 +315,7 @@ group by
 order by 
     no_of_rentals desc;
 
--- 22. Revenue per month
+-- 23. Revenue per month
 select 
     DATENAME(MonTH, payment_date) as month, 
     ROUND(SUM(amount), 2) as total_amount
@@ -326,7 +326,7 @@ group by
 order by 
     total_amount desc;
 
--- 23. Highest grossing year
+-- 24. Highest grossing year
 select 
     YEAR(payment_date) as year, 
     ROUND(SUM(amount), 2) as revenue
@@ -380,7 +380,7 @@ group by
 order by 
     no_of_rentals desc;
 
--- 26. Which is the highest grossing genre.
+-- 26-a. Which is the highest grossing genre.
 select 
     category.name, 
     COUNT(rental.rental_id) as no_of_rentals, 
@@ -402,26 +402,26 @@ group by
 order by 
     no_of_rentals desc;
 
--- top 10 customers by rental frequency
+--27 top 10 customers by rental frequency
 select customer.customer_id, COUNT(rental.rental_id) as rental_frequency
 from customer
 inner join rental on customer.customer_id = rental.customer_id
 group by customer.customer_id;
 
--- no_of_categories for a specific film
+--28 no_of_categories for a specific film
 select film.title, count(film_category.category_id) as no_of_categories
 from film
 inner join film_category on film.film_id = film_category.film_id
 group by film.title
 
--- no_of_films for a specific category
+--29 no_of_films for a specific category
 select category.name, count(film_category.category_id) as no_of_films
 from category
 inner join film_category on category.category_id = film_category.category_id
 group by category.name
 order by count(film_category.category_id) desc
 
--- average rate of movies under a certain category
+--30 average rate of movies under a certain category
 select category.name, round(avg(film.rental_rate), 2) as avg_rental_rate
 from category
 left join 
@@ -431,8 +431,8 @@ left join
 group by category.name
 order by 2 desc
 
--- sum of rental_rate for certain category
-select category.name, round(sum(film.rental_rate), 2) as rental_rate_sum
+--31 total of rental_rate for certain category
+select category.name, round(sum(film.rental_rate), 2) as total_rental_rate
 from category
 left join
 	film_category on category.category_id = film_category.category_id
@@ -441,8 +441,9 @@ left join
 group by category.name
 order by 2 desc
 
---  Get all customers who have rented a film in a specific category
-select *
+--32  find all customers who have rented a film in a specific category
+select customer.customer_id, concat(customer.first_name, ' ', customer.last_name) as full_name,
+customer.email, customer.address_id, category.category_id, category.name
 from customer
 inner join rental on customer.customer_id = rental.customer_id
 inner join inventory on rental.inventory_id = inventory.inventory_id
@@ -450,16 +451,15 @@ inner join film_category on inventory.film_id = film_category.film_id
 inner join category on film_category.category_id = category.category_id
 where category.category_id = 1 -- replace with any category_id
 
--- Get all customers who live in a specific city
+--33 find customers who live in specific city
 select city.city_name, * 
 from customer
 inner join address on customer.address_id = address.address_id
 inner join city on city.city_id = address.city_id
 where city.city_id = 3
 
--- get all films with specific actor
-select concat(actor.first_name, ' ', actor.last_name), * from film
+--34 get all films by actor_id
+select concat(actor.first_name, ' ', actor.last_name) as full_name, film.title from film
 inner join film_actor on film.film_id = film_actor.film_id
 inner join actor on film_actor.actor_id = actor.actor_id
-WHERE film_actor.actor_id = 2;  -- Replace with desired actor ID
-
+WHERE film_actor.actor_id = 32;  -- Replace with desired actor ID
