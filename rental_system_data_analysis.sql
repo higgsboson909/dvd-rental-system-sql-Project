@@ -28,122 +28,122 @@ select count(distinct(name)) as no_of_category from category;
 select * from country;
 
 -- 2.	Countries having the highest cities.
-SELECT country.country_name, COUNT(city.country_id) AS no_of_cities
-FROM country
-INNER JOIN city ON country.country_id = city.country_id
-GROUP BY country.country_name
-ORDER BY no_of_cities DESC;
+select country.country_name, COUNT(city.country_id) as no_of_cities
+from country
+inner join city on country.country_id = city.country_id
+group by country.country_name
+order by no_of_cities desc;
 
 
 -- 3.	Countries with having the highest customers. 
-SELECT country.country_name, COUNT(customer.customer_id) AS no_of_customers
-FROM customer
-INNER JOIN address ON customer.address_id = address.address_id
-INNER JOIN city ON address.city_id = city.city_id
-INNER JOIN country ON city.country_id = country.country_id
-GROUP BY country.country_name
-ORDER BY no_of_customers DESC; 
+select country.country_name, COUNT(customer.customer_id) as no_of_customers
+from customer
+inner join address on customer.address_id = address.address_id
+inner join city on address.city_id = city.city_id
+inner join country on city.country_id = country.country_id
+group by country.country_name
+order by no_of_customers desc; 
 
 -- 4.	Cities having the highest number of customers.
-SELECT city.city_name, COUNT(customer.customer_id) AS no_of_customers,
-       SUM(COUNT(customer.customer_id)) OVER (ORDER BY COUNT(customer.customer_id) DESC, city.city_name) AS running_total
-FROM customer
-INNER JOIN address ON customer.address_id = address.address_id
-INNER JOIN city ON address.city_id = city.city_id
-GROUP BY city.city_name
-ORDER BY no_of_customers DESC;
+select city.city_name, COUNT(customer.customer_id) as no_of_customers,
+       SUM(COUNT(customer.customer_id)) over (order by COUNT(customer.customer_id) desc, city.city_name) as running_total
+from customer
+inner join address on customer.address_id = address.address_id
+inner join city on address.city_id = city.city_id
+group by city.city_name
+order by no_of_customers desc;
 
  
 -- 5.	Countries having the highest rental.
-SELECT country.country_name, COUNT(rental.rental_id) AS number_of_rentals,
-       SUM(COUNT(rental.rental_id)) OVER (ORDER BY COUNT(rental.rental_id) DESC, country.country_name) AS running_total
-FROM country
-INNER JOIN city ON country.country_id = city.country_id
-INNER JOIN address ON city.city_id = address.city_id
-INNER JOIN customer ON address.address_id = customer.address_id
-INNER JOIN rental ON customer.customer_id = rental.customer_id
-GROUP BY country.country_name
-ORDER BY number_of_rentals DESC;
+select country.country_name, COUNT(rental.rental_id) as number_of_rentals,
+       SUM(COUNT(rental.rental_id)) over (order by COUNT(rental.rental_id) desc, country.country_name) as running_total
+from country
+inner join city on country.country_id = city.country_id
+inner join address on city.city_id = address.city_id
+inner join customer on address.address_id = customer.address_id
+inner join rental on customer.customer_id = rental.customer_id
+group by country.country_name
+order by number_of_rentals desc;
 
 
 -- 6.	Countries receiving largest payment.
-SELECT country.country_name, ROUND(SUM(payment.amount), 2) AS rcv_payments,
-       SUM(ROUND(SUM(payment.amount), 2)) OVER (ORDER BY ROUND(SUM(payment.amount), 2) DESC, country.country_name) AS running_total
-FROM country
-INNER JOIN city ON country.country_id = city.country_id
-INNER JOIN address ON city.city_id = address.city_id
-INNER JOIN customer ON address.address_id = customer.address_id
-INNER JOIN payment ON customer.customer_id = payment.customer_id
-GROUP BY country.country_name
-ORDER BY rcv_payments DESC;
+select country.country_name, ROUND(SUM(payment.amount), 2) as rcv_payments,
+       SUM(ROUND(SUM(payment.amount), 2)) over (order by ROUND(SUM(payment.amount), 2) desc, country.country_name) as running_total
+from country
+inner join city on country.country_id = city.country_id
+inner join address on city.city_id = address.city_id
+inner join customer on address.address_id = customer.address_id
+inner join payment on customer.customer_id = payment.customer_id
+group by country.country_name
+order by rcv_payments desc;
 
 
 -- 7.	Cities having the highest rental.
-SELECT 
+select 
     city_name, 
-    COUNT(rental_id) AS number_of_rentals, 
-    SUM(COUNT(rental_id)) OVER (ORDER BY COUNT(rental_id) DESC, city_name) AS running_total
-FROM 
+    COUNT(rental_id) as number_of_rentals, 
+    SUM(COUNT(rental_id)) over (order by COUNT(rental_id) desc, city_name) as running_total
+from 
     city 
-JOIN 
-    address ON address.city_id = city.city_id
-JOIN 
-    customer ON customer.address_id = address.address_id
-JOIN 
-    rental ON rental.customer_id = customer.customer_id
-GROUP BY 
+join 
+    address on address.city_id = city.city_id
+join 
+    customer on customer.address_id = address.address_id
+join 
+    rental on rental.customer_id = customer.customer_id
+group by 
     city_name
-ORDER BY 
-    number_of_rentals DESC;
+order by 
+    number_of_rentals desc;
 
 -- 8.	Cities having the highest revenue.
-SELECT 
+select 
     city_name, 
-    ROUND(SUM(amount), 2) AS rcv_payments, 
-    SUM(ROUND(SUM(amount), 2)) OVER (ORDER BY ROUND(SUM(amount), 2) DESC, city_name) AS running_total
-FROM 
+    ROUND(SUM(amount), 2) as rcv_payments, 
+    SUM(ROUND(SUM(amount), 2)) over (order by ROUND(SUM(amount), 2) desc, city_name) as running_total
+from 
     city 
-JOIN 
-    address ON address.city_id = city.city_id
-JOIN 
-    customer ON customer.address_id = address.address_id
-JOIN 
-    payment ON payment.customer_id = customer.customer_id
-GROUP BY 
+join 
+    address on address.city_id = city.city_id
+join 
+    customer on customer.address_id = address.address_id
+join 
+    payment on payment.customer_id = customer.customer_id
+group by 
     city_name
-ORDER BY 
-    rcv_payments DESC;
+order by 
+    rcv_payments desc;
 
  
 -- 9.	Customers having the highest rental.
-SELECT customer.first_name + ' ' + customer.last_name AS full_name, 
-       COUNT(rental.rental_id) AS no_of_rentals
-FROM rental
-INNER JOIN customer ON rental.customer_id = customer.customer_id
-GROUP BY (customer.first_name  + ' ' + customer.last_name)
-ORDER BY no_of_rentals DESC;
+select customer.first_name + ' ' + customer.last_name as full_name, 
+       COUNT(rental.rental_id) as no_of_rentals
+from rental
+inner join customer on rental.customer_id = customer.customer_id
+group by (customer.first_name  + ' ' + customer.last_name)
+order by no_of_rentals desc;
 
 -- 10.	Customer who produced the highest revenue(entire with address).
-SELECT customer.first_name + ' ' + customer.last_name AS full_name,
-       ROUND(SUM(amount), 2) AS rcv_amount
-FROM customer
-INNER JOIN rental ON customer.customer_id = rental.customer_id
-INNER JOIN payment ON rental.rental_id = payment.rental_id
-GROUP BY customer.first_name + ' ' + customer.last_name
-ORDER BY rcv_amount DESC;
+select customer.first_name + ' ' + customer.last_name as full_name,
+       ROUND(SUM(amount), 2) as rcv_amount
+from customer
+inner join rental on customer.customer_id = rental.customer_id
+inner join payment on rental.rental_id = payment.rental_id
+group by customer.first_name + ' ' + customer.last_name
+order by rcv_amount desc;
 
 
 -- 11.	Store has the highest rental.
 
-SELECT store.store_id, COUNT(rental.rental_id) AS no_of_rented_dvds
-FROM store
-INNER JOIN inventory ON store.store_id = inventory.store_id
-INNER JOIN rental ON inventory.inventory_id = rental.inventory_id
-GROUP BY store.store_id
-ORDER BY COUNT(rental.rental_id) DESC;
+select store.store_id, COUNT(rental.rental_id) as no_of_rented_dvds
+from store
+inner join inventory on store.store_id = inventory.store_id
+inner join rental on inventory.inventory_id = rental.inventory_id
+group by store.store_id
+order by COUNT(rental.rental_id) desc;
 
 -- 12.	Staff offering the highest rental.
-select concat(staff.first_name, ' ' , staff.last_name) AS staff_name,
+select concat(staff.first_name, ' ' , staff.last_name) as staff_name,
 count(rental_id) as no_of_rented_dvds
 from staff
 inner join rental on staff.staff_id = rental.staff_id
@@ -153,260 +153,260 @@ order by no_of_rented_dvds desc
 
 -- 13.	Store collecting the highest revenue.
 
-SELECT 
+select 
     store.store_id, 
-    ROUND(SUM(payment.amount), 2) AS rcv_amount
-FROM 
+    ROUND(SUM(payment.amount), 2) as rcv_amount
+from 
     store
-INNER JOIN 
-    inventory ON inventory.store_id = store.store_id
-INNER JOIN 
-    rental ON inventory.inventory_id = rental.inventory_id
-INNER JOIN 
-    payment ON payment.rental_id = rental.rental_id
-GROUP BY 
+inner join 
+    inventory on inventory.store_id = store.store_id
+inner join 
+    rental on inventory.inventory_id = rental.inventory_id
+inner join 
+    payment on payment.rental_id = rental.rental_id
+group by 
     store.store_id
-ORDER BY 
-    rcv_amount DESC;
+order by 
+    rcv_amount desc;
 
  
 -- 14.	Staff collecting the highest payment.
-SELECT 
-    staff.first_name + ' ' + staff.last_name AS staff_name, 
+select 
+    staff.first_name + ' ' + staff.last_name as staff_name, 
     ROUND(SUM(payment.amount), 2)
-FROM 
+from 
     staff
-INNER JOIN 
-    payment ON staff.staff_id = payment.staff_id
-GROUP BY 
+inner join 
+    payment on staff.staff_id = payment.staff_id
+group by 
     staff.first_name + ' ' + staff.last_name
-ORDER BY 
-    2 DESC;
+order by 
+    2 desc;
 
 -- 15.	Actor with the highest number of movies.
 
-SELECT 
+select 
     concat(actor.first_name, ' ', actor.last_name) as actor_name, 
-    COUNT(film_actor.film_id) AS no_of_movies
-FROM 
+    COUNT(film_actor.film_id) as no_of_movies
+from 
     actor
-INNER JOIN 
-    film_actor ON actor.actor_id = film_actor.actor_id
-GROUP BY 
+inner join 
+    film_actor on actor.actor_id = film_actor.actor_id
+group by 
     concat(actor.first_name, ' ', actor.last_name)
-ORDER BY 
-    no_of_movies DESC;
+order by 
+    no_of_movies desc;
 
 
 -- 16.	Movies with the highest rental.
-SELECT 
+select 
     film.title, 
-    COUNT(rental.rental_id) AS no_of_rentals
-FROM 
+    COUNT(rental.rental_id) as no_of_rentals
+from 
     film
-INNER JOIN 
-    inventory ON film.film_id = inventory.film_id
-INNER JOIN 
-    rental ON rental.inventory_id = inventory.inventory_id
-GROUP BY 
+inner join 
+    inventory on film.film_id = inventory.film_id
+inner join 
+    rental on rental.inventory_id = inventory.inventory_id
+group by 
     film.title
-ORDER BY 
-    no_of_rentals DESC;
+order by 
+    no_of_rentals desc;
 
 
 
 -- 17.	Movies with the highest payment
 
-SELECT 
+select 
     film.title, 
-    SUM(payment.amount) AS total_amount
-FROM 
+    SUM(payment.amount) as total_amount
+from 
     film
-INNER JOIN 
-    inventory ON film.film_id = inventory.film_id
-INNER JOIN 
-    rental ON rental.inventory_id = inventory.inventory_id
-INNER JOIN
-	payment ON payment.rental_id = rental.rental_id
-GROUP BY 
+inner join 
+    inventory on film.film_id = inventory.film_id
+inner join 
+    rental on rental.inventory_id = inventory.inventory_id
+inner join
+	payment on payment.rental_id = rental.rental_id
+group by 
     film.title
-ORDER BY 
-    2 DESC;
+order by 
+    2 desc;
 
 
 -- 18.	Which actors movie is the highest grossing.
 
-SELECT 
-    CONCAT(actor.first_name, ' ', actor.last_name) AS actor_name, 
-    ROUND(SUM(payment.amount), 2) AS total_amt
-FROM 
+select 
+    ConCAT(actor.first_name, ' ', actor.last_name) as actor_name, 
+    ROUND(SUM(payment.amount), 2) as total_amt
+from 
     actor
-INNER JOIN 
-    film_actor ON actor.actor_id = film_actor.actor_id
-INNER JOIN 
-    film ON film_actor.film_id = film.film_id
-INNER JOIN 
-    inventory ON film.film_id = inventory.film_id
-INNER JOIN 
-    rental ON inventory.inventory_id = rental.inventory_id
-INNER JOIN 
-    payment ON rental.rental_id = payment.rental_id
-GROUP BY 
-    CONCAT(actor.first_name, ' ', actor.last_name)
-ORDER BY 
-    total_amt DESC;
+inner join 
+    film_actor on actor.actor_id = film_actor.actor_id
+inner join 
+    film on film_actor.film_id = film.film_id
+inner join 
+    inventory on film.film_id = inventory.film_id
+inner join 
+    rental on inventory.inventory_id = rental.inventory_id
+inner join 
+    payment on rental.rental_id = payment.rental_id
+group by 
+    ConCAT(actor.first_name, ' ', actor.last_name)
+order by 
+    total_amt desc;
 
 
 -- 19. Write a query to find the full names of customers who have rented science fiction, comedy, action and drama movies highest times.
 
-SELECT 
-    CONCAT(customer.first_name, ' ', customer.last_name) AS customer_name,
-    COUNT(category.category_id) AS no_of_times_rented
-FROM 
+select 
+    ConCAT(customer.first_name, ' ', customer.last_name) as customer_name,
+    COUNT(category.category_id) as no_of_times_rented
+from 
     customer
-INNER JOIN 
-    rental ON customer.customer_id = rental.customer_id
-INNER JOIN 
-    inventory ON inventory.inventory_id = rental.inventory_id
-INNER JOIN 
-    film ON film.film_id = inventory.film_id
-INNER JOIN 
-    film_category ON film_category.film_id = film.film_id
-INNER JOIN 
-    category ON category.category_id = film_category.category_id
+inner join 
+    rental on customer.customer_id = rental.customer_id
+inner join 
+    inventory on inventory.inventory_id = rental.inventory_id
+inner join 
+    film on film.film_id = inventory.film_id
+inner join 
+    film_category on film_category.film_id = film.film_id
+inner join 
+    category on category.category_id = film_category.category_id
 WHERE 
     category.name IN ('Sci-Fi', 'Comedy', 'Action', 'Drama')
-GROUP BY 
-    CONCAT(customer.first_name, ' ', customer.last_name)
-ORDER BY 
-    no_of_times_rented DESC;
+group by 
+    ConCAT(customer.first_name, ' ', customer.last_name)
+order by 
+    no_of_times_rented desc;
 
 -- 20. Film title with Language
-SELECT DISTINCT 
+select DISTINCT 
     film.title,
     language.name
-FROM 
+from 
     film
-INNER JOIN 
-    language ON language.language_id = film.language_id;
+inner join 
+    language on language.language_id = film.language_id;
 
 -- 21.language category and name
-SELECT DISTINCT 
+select DISTINCT 
     film.title,
     category.name,
-    language.name AS laguage
-FROM 
+    language.name as laguage
+from 
     category
-INNER JOIN 
-    film_category ON category.category_id = film_category.category_id
-INNER JOIN 
-    film ON film_category.film_id = film.film_id
-INNER JOIN 
-    language ON film.language_id = language.language_id;
+inner join 
+    film_category on category.category_id = film_category.category_id
+inner join 
+    film on film_category.film_id = film.film_id
+inner join 
+    language on film.language_id = language.language_id;
 
 -- 21. Rentals each month
-SELECT 
-    DATENAME(MONTH, rental_date) AS month_no, 
-    COUNT(rental_id) AS no_of_rentals
-FROM 
+select 
+    DATENAME(MonTH, rental_date) as month_no, 
+    COUNT(rental_id) as no_of_rentals
+from 
     rental
-GROUP BY 
-    DATENAME(MONTH, rental_date)
-ORDER BY 
-    no_of_rentals DESC;
+group by 
+    DATENAME(MonTH, rental_date)
+order by 
+    no_of_rentals desc;
 
 -- 22. Revenue per month
-SELECT 
-    DATENAME(MONTH, payment_date) AS month, 
-    ROUND(SUM(amount), 2) AS total_amount
-FROM 
+select 
+    DATENAME(MonTH, payment_date) as month, 
+    ROUND(SUM(amount), 2) as total_amount
+from 
     payment
-GROUP BY 
-    DATENAME(MONTH, payment_date)
-ORDER BY 
-    total_amount DESC;
+group by 
+    DATENAME(MonTH, payment_date)
+order by 
+    total_amount desc;
 
 -- 23. Highest grossing year
-SELECT 
-    YEAR(payment_date) AS year, 
-    ROUND(SUM(amount), 2) AS revenue
-FROM 
+select 
+    YEAR(payment_date) as year, 
+    ROUND(SUM(amount), 2) as revenue
+from 
     payment
-GROUP BY 
+group by 
     YEAR(payment_date)
-ORDER BY 
-    revenue DESC;
+order by 
+    revenue desc;
 
 -- 24. Revenue between dates.
-SELECT 
-    ROUND(SUM(amount), 2) AS revenue_amt
-FROM 
+select 
+    ROUND(SUM(amount), 2) as revenue_amt
+from 
     payment
 WHERE 
     payment_date >= DATE AND payment_date <= DATE;
 
 -- 25. Distinct renters per month.
-SELECT 
-    DATENAME(MONTH, rental_date) AS month_no, 
-    COUNT(DISTINCT rental.customer_id) AS no_of_rentals
-FROM 
+select 
+    DATENAME(MonTH, rental_date) as month_no, 
+    COUNT(DISTINCT rental.customer_id) as no_of_rentals
+from 
     rental
-INNER JOIN 
+inner join 
     customer 
-ON 
+on 
     rental.customer_id = customer.customer_id
-GROUP BY 
-    DATENAME(MONTH, rental_date)
-ORDER BY 
-    no_of_rentals DESC;
+group by 
+    DATENAME(MonTH, rental_date)
+order by 
+    no_of_rentals desc;
 
 
 -- 26. Which is the most popular genres.
-SELECT 
+select 
     category.name, 
-    COUNT(rental.rental_id) AS no_of_rentals
-FROM 
+    COUNT(rental.rental_id) as no_of_rentals
+from 
     category
-INNER JOIN 
-    film_category ON category.category_id = film_category.category_id
-INNER JOIN 
-    film ON film.film_id = film_category.film_id
-INNER JOIN 
-    inventory ON film.film_id = inventory.film_id
-INNER JOIN 
-    rental ON inventory.inventory_id = rental.inventory_id
-GROUP BY 
+inner join 
+    film_category on category.category_id = film_category.category_id
+inner join 
+    film on film.film_id = film_category.film_id
+inner join 
+    inventory on film.film_id = inventory.film_id
+inner join 
+    rental on inventory.inventory_id = rental.inventory_id
+group by 
     category.name
-ORDER BY 
-    no_of_rentals DESC;
+order by 
+    no_of_rentals desc;
 
 -- 26. Which is the highest grossing genre.
-SELECT 
+select 
     category.name, 
-    COUNT(rental.rental_id) AS no_of_rentals, 
-    ROUND(SUM(payment.amount), 2) AS revenue
-FROM 
+    COUNT(rental.rental_id) as no_of_rentals, 
+    ROUND(SUM(payment.amount), 2) as revenue
+from 
     category
-INNER JOIN 
-    film_category ON category.category_id = film_category.category_id
-INNER JOIN 
-    film ON film.film_id = film_category.film_id
-INNER JOIN 
-    inventory ON film.film_id = inventory.film_id
-INNER JOIN 
-    rental ON inventory.inventory_id = rental.inventory_id
-INNER JOIN 
-    payment ON rental.rental_id = payment.rental_id
-GROUP BY 
+inner join 
+    film_category on category.category_id = film_category.category_id
+inner join 
+    film on film.film_id = film_category.film_id
+inner join 
+    inventory on film.film_id = inventory.film_id
+inner join 
+    rental on inventory.inventory_id = rental.inventory_id
+inner join 
+    payment on rental.rental_id = payment.rental_id
+group by 
     category.name
-ORDER BY 
-    no_of_rentals DESC;
+order by 
+    no_of_rentals desc;
 
 -- top 10 customers by rental frequency
-SELECT customer.customer_id, COUNT(rental.rental_id) AS rental_frequency
-FROM customer
-INNER JOIN rental ON customer.customer_id = rental.customer_id
-GROUP BY customer.customer_id;
+select customer.customer_id, COUNT(rental.rental_id) as rental_frequency
+from customer
+inner join rental on customer.customer_id = rental.customer_id
+group by customer.customer_id;
 
 -- no_of_categories for a specific film
 select film.title, count(film_category.category_id) as no_of_categories
@@ -419,7 +419,7 @@ select category.name, count(film_category.category_id) as no_of_films
 from category
 inner join film_category on category.category_id = film_category.category_id
 group by category.name
-order by count(film_category.category_id) DESC
+order by count(film_category.category_id) desc
 
 -- average rate of movies under a certain category
 select category.name, round(avg(film.rental_rate), 2) as avg_rental_rate
@@ -429,7 +429,7 @@ left join
 left join 
 	film on film_category.film_id = film.film_id
 group by category.name
-order by 2 DESC
+order by 2 desc
 
 -- sum of rental_rate for certain category
 select category.name, round(sum(film.rental_rate), 2) as rental_rate_sum
@@ -458,8 +458,8 @@ inner join city on city.city_id = address.city_id
 where city.city_id = 3
 
 -- get all films with specific actor
-SELECT concat(actor.first_name, ' ', actor.last_name), * FROM film
-inner JOIN film_actor ON film.film_id = film_actor.film_id
+select concat(actor.first_name, ' ', actor.last_name), * from film
+inner join film_actor on film.film_id = film_actor.film_id
 inner join actor on film_actor.actor_id = actor.actor_id
 WHERE film_actor.actor_id = 2;  -- Replace with desired actor ID
 
