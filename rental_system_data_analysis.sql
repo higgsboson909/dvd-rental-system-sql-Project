@@ -518,7 +518,7 @@ from
 	actor where actor_id = 32);
 
 
---34 provide the city names with their average rental duration
+--35 provide the city names with their average rental duration
 select city.city_name, avg(datediff(day, rental.rental_date, rental.return_date)) 
 as
 	avg_rental_duration
@@ -534,7 +534,7 @@ having avg(datediff(day, rental.rental_date, rental.return_date)) > (
 );
 
 
---35 give the cities where the average rental duration is longer than the overall average rental 
+--36 give the cities where the average rental duration is longer than the overall average rental 
 select city.city_name, avg(datediff(day, rental.rental_date, rental.return_date)) as avg_rental_duration
 from city
 join address on city.city_id = address.city_id
