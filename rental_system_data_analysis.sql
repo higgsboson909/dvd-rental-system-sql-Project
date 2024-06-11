@@ -509,9 +509,42 @@ select concat(actor.first_name, ' ', actor.last_name) as full_name, film.title
 from film
 inner join film_actor on film.film_id = film_actor.film_id
 inner join actor on film_actor.actor_id = actor.actor_id;
---execution
+
+-- veiw execution
 select * from actor_films 
 where
 	full_name = (select concat(first_name, ' ', last_name) 
 from
 	actor where actor_id = 32);
+
+
+--34 provide the city names with their average rental duration
+select city.city_name, avg(datediff(day, rental.rental_date, rental.return_date)) 
+as
+	avg_rental_duration
+from
+	city
+join address on city.city_id = address.city_id
+join customer on address.address_id = customer.address_id
+join rental on customer.customer_id = rental.customer_id
+group by city.city_name
+having avg(datediff(day, rental.rental_date, rental.return_date)) > (
+  select avg(datediff(day, return_date, rental_date))
+  from rental
+);
+
+
+--35 give the cities where the average rental duration is longer than the overall average rental 
+select city.city_name, avg(datediff(day, rental.rental_date, rental.return_date)) as avg_rental_duration
+from city
+join address on city.city_id = address.city_id
+join customer on address.address_id = customer.address_id
+join rental on customer.customer_id = rental.customer_id
+group by city.city_name
+having avg(datediff(day, rental.rental_date, rental.return_date)) > (
+  select avg(datediff(day, rental_date, return_date))
+  from rental
+)
+order by avg_rental_duration desc;
+
+
