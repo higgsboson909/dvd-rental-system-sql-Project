@@ -282,6 +282,8 @@ BEGIN
 END;
 GO
 
+-- inserted
+
 -- for inventory table
 
 -- Create procedure to insert a new inventory item
