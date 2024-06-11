@@ -24,19 +24,19 @@ select count(distinct(name)) as no_of_category from category;
 
 
 
--- 1.	Countries where the services are provided.
+-- 1.	countries where the services are provided.
 select * from country;
 
--- 2.	Countries having the highest cities.
-select country.country_name, COUNT(city.country_id) as no_of_cities
+-- 2.	countries having the highest cities.
+select country.country_name, count(city.country_id) as no_of_cities
 from country
 inner join city on country.country_id = city.country_id
 group by country.country_name
 order by no_of_cities desc;
 
 
--- 3.	Countries with having the highest customers. 
-select country.country_name, COUNT(customer.customer_id) as no_of_customers
+-- 3.	countries with having the highest customers. 
+select country.country_name, count(customer.customer_id) as no_of_customers
 from customer
 inner join address on customer.address_id = address.address_id
 inner join city on address.city_id = city.city_id
@@ -45,8 +45,8 @@ group by country.country_name
 order by no_of_customers desc; 
 
 -- 4.	Cities having the highest number of customers.
-select city.city_name, COUNT(customer.customer_id) as no_of_customers,
-       sum(COUNT(customer.customer_id)) over (order by COUNT(customer.customer_id) desc, city.city_name) as running_total
+select city.city_name, count(customer.customer_id) as no_of_customers,
+       sum(count(customer.customer_id)) over (order by count(customer.customer_id) desc, city.city_name) as running_total
 from customer
 inner join address on customer.address_id = address.address_id
 inner join city on address.city_id = city.city_id
@@ -54,9 +54,9 @@ group by city.city_name
 order by no_of_customers desc;
 
  
--- 5.	Countries having the highest rental.
-select country.country_name, COUNT(rental.rental_id) as number_of_rentals,
-       sum(COUNT(rental.rental_id)) over (order by COUNT(rental.rental_id) desc, country.country_name) as running_total
+-- 5.	countries having the highest rental.
+select country.country_name, count(rental.rental_id) as number_of_rentals,
+       sum(count(rental.rental_id)) over (order by count(rental.rental_id) desc, country.country_name) as running_total
 from country
 inner join city on country.country_id = city.country_id
 inner join address on city.city_id = address.city_id
@@ -66,7 +66,7 @@ group by country.country_name
 order by number_of_rentals desc;
 
 
--- 6.	Countries receiving largest payment.
+-- 6.	countries receiving largest payment.
 select country.country_name, round(sum(payment.amount), 2) as rcv_payments,
        sum(round(sum(payment.amount), 2)) over (order by round(sum(payment.amount), 2) desc, country.country_name) as running_total
 from country
@@ -81,8 +81,8 @@ order by rcv_payments desc;
 -- 7.	Cities having the highest rental.
 select 
     city_name, 
-    COUNT(rental_id) as number_of_rentals, 
-    sum(COUNT(rental_id)) over (order by COUNT(rental_id) desc, city_name) as running_total
+    count(rental_id) as number_of_rentals, 
+    sum(count(rental_id)) over (order by count(rental_id) desc, city_name) as running_total
 from 
     city 
 join 
@@ -117,7 +117,7 @@ order by
  
 -- 9.	Customers having the highest rental.
 select customer.first_name + ' ' + customer.last_name as full_name, 
-       COUNT(rental.rental_id) as no_of_rentals
+       count(rental.rental_id) as no_of_rentals
 from rental
 inner join customer on rental.customer_id = customer.customer_id
 group by (customer.first_name  + ' ' + customer.last_name)
@@ -135,12 +135,12 @@ order by rcv_amount desc;
 
 -- 11.	Store has the highest rental.
 
-select store.store_id, COUNT(rental.rental_id) as no_of_rented_dvds
+select store.store_id, count(rental.rental_id) as no_of_rented_dvds
 from store
 inner join inventory on store.store_id = inventory.store_id
 inner join rental on inventory.inventory_id = rental.inventory_id
 group by store.store_id
-order by COUNT(rental.rental_id) desc;
+order by count(rental.rental_id) desc;
 
 -- 12.	Staff offering the highest rental.
 select concat(staff.first_name, ' ' , staff.last_name) as staff_name,
@@ -187,7 +187,7 @@ order by
 
 select 
     concat(actor.first_name, ' ', actor.last_name) as actor_name, 
-    COUNT(film_actor.film_id) as no_of_movies
+    count(film_actor.film_id) as no_of_movies
 from 
     actor
 inner join 
@@ -201,7 +201,7 @@ order by
 -- 16.	Movies with the highest rental.
 select 
     film.title, 
-    COUNT(rental.rental_id) as no_of_rentals
+    count(rental.rental_id) as no_of_rentals
 from 
     film
 inner join 
@@ -282,7 +282,7 @@ order by
     no_of_times_rented desc;
 
 -- 20. Film title with Language
-select DISTINCT 
+select distinct 
     film.title,
     language.name
 from 
@@ -291,7 +291,7 @@ inner join
     language on language.language_id = film.language_id;
 
 -- 21.language category and name
-select DISTINCT 
+select distinct 
     film.title,
     category.name,
     language.name as laguage
@@ -306,23 +306,23 @@ inner join
 
 -- 22. Rentals each month
 select 
-    DATENAME(MonTH, rental_date) as month_no, 
-    COUNT(rental_id) as no_of_rentals
+    datename(month, rental_date) as month_no, 
+    count(rental_id) as no_of_rentals
 from 
     rental
 group by 
-    DATENAME(MonTH, rental_date)
+    datename(month, rental_date)
 order by 
     no_of_rentals desc;
 
 -- 23. Revenue per month
 select 
-    DATENAME(MonTH, payment_date) as month, 
+    datename(month, payment_date) as month, 
     round(sum(amount), 2) as total_amount
 from 
     payment
 group by 
-    DATENAME(MonTH, payment_date)
+    datename(month, payment_date)
 order by 
     total_amount desc;
 
@@ -345,10 +345,10 @@ from
 where 
     payment_date >= DATE AND payment_date <= DATE;
 
--- 25. Distinct renters per month.
+-- 25. distinct renters per month.
 select 
-    DATENAME(MonTH, rental_date) as month_no, 
-    COUNT(DISTINCT rental.customer_id) as no_of_rentals
+    datename(month, rental_date) as month_no, 
+    count(distinct rental.customer_id) as no_of_rentals
 from 
     rental
 inner join 
@@ -356,7 +356,7 @@ inner join
 on 
     rental.customer_id = customer.customer_id
 group by 
-    DATENAME(MonTH, rental_date)
+    datename(month, rental_date)
 order by 
     no_of_rentals desc;
 
@@ -364,7 +364,7 @@ order by
 -- 26. Which is the most popular genres.
 select 
     category.name, 
-    COUNT(rental.rental_id) as no_of_rentals
+    count(rental.rental_id) as no_of_rentals
 from 
     category
 inner join 
@@ -385,7 +385,7 @@ order by
 create view category_rentals_revenue as
 select 
     category.name, 
-    COUNT(rental.rental_id) as no_of_rentals, 
+    count(rental.rental_id) as no_of_rentals, 
     round(sum(payment.amount), 2) as revenue
 from 
     category
@@ -410,7 +410,7 @@ order by no_of_rentals desc;
 
 
 --27 top 10 customers by rental frequency
-select customer.customer_id, COUNT(rental.rental_id) as rental_frequency
+select customer.customer_id, count(rental.rental_id) as rental_frequency
 from customer
 inner join rental on customer.customer_id = rental.customer_id
 group by customer.customer_id;
